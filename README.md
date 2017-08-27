@@ -1,5 +1,5 @@
 # Single page isomorphic example
-This is a minimal example of Miso's "Isomorphic" feature.
+This is a minimal example of Miso's Isomorphic feature.
 
 ## About isomorphism
 Chances are that you happen to know what the mathematical definition of *isomorphism* is. If you do, forget that definition *right now* and treat it as a new term altogether. That'll be easier.
