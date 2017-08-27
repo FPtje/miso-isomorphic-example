@@ -1,0 +1,58 @@
+name:                miso-isomorphic-example
+version:             0.1.0.0
+synopsis:            Example showing the isomorphic aspect of miso
+author:              Falco Peijnenburg
+maintainer:          fpeijnenburg@gmail.com
+category:            Web
+build-type:          Simple
+extra-source-files:  ChangeLog.md
+cabal-version:       >=1.10
+
+executable server
+  main-is:             Main.hs
+
+  if impl(ghcjs)
+    buildable: False
+  else
+    ghc-options:
+      -O2 -threaded -Wall
+    hs-source-dirs:
+      server, shared
+    build-depends:
+      aeson,
+      base < 5,
+      containers,
+      http-types,
+      lens,
+      lucid,
+      miso,
+      mtl,
+      network-uri,
+      servant,
+      servant-lucid,
+      servant-server,
+      wai,
+      wai-extra,
+      warp
+    default-language:
+      Haskell2010
+
+executable client
+  main-is:
+    Main.hs
+  if !impl(ghcjs)
+    buildable: False
+  else
+    ghcjs-options:
+      -dedupe
+    hs-source-dirs:
+      client, shared
+    build-depends:
+      aeson,
+      base < 5,
+      containers,
+      lens,
+      miso,
+      servant
+    default-language:
+      Haskell2010
