@@ -8,6 +8,9 @@ module Common where
 import           Control.Lens
 import           Data.Proxy
 import           Servant.API
+#if MIN_VERSION_servant(0,10,0)
+import           Servant.Utils.Links
+#endif
 
 import           Miso
 import           Miso.String
