@@ -33,7 +33,7 @@ app =
     Servant.serve (Proxy @ServerAPI) (static :<|> serverHandlers)
   where
     static :: Servant.Server StaticAPI
-    static = Servant.serveDirectory "static"
+    static = Servant.serveDirectoryFileServer "static"
 
     serverHandlers :: Servant.Server ServerRoutes
     serverHandlers = pure $ HtmlPage $ Common.homeView Common.initialModel
