@@ -28,7 +28,7 @@ main = do
   miso App
     { initialAction = Common.NoOp
     , model         = Common.initialModel currentURI
-    , update        = updateModel
+    , update        = fromTransition . updateModel
     , view          = viewModel
     , events        = defaultEvents
     , subs          = [ uriSub Common.HandleURIChange ]
@@ -37,24 +37,17 @@ main = do
 
 updateModel
     :: Common.Action
-    -> Common.Model
-    -> Effect Common.Action Common.Model
-updateModel action m =
+    -> Transition Common.Action Common.Model ()
+updateModel action =
     case action of
-      Common.NoOp -> noEff m
-      Common.AddOne ->
-        m & Common.counterValue +~ 1
-          & noEff
-      Common.SubtractOne ->
-        m & Common.counterValue -~ 1
-          & noEff
+      Common.NoOp          -> pure ()
+      Common.AddOne        -> Common.counterValue += 1
+      Common.SubtractOne   -> Common.counterValue -= 1
       Common.ChangeURI uri ->
-        m <# do
+        scheduleIO $ do
           pushURI uri
           pure Common.NoOp
-      Common.HandleURIChange uri ->
-        m & Common.uri .~ uri
-          & noEff
+      Common.HandleURIChange uri -> Common.uri .= uri
 
 -- Checks which URI is open and shows the appropriate view
 viewModel :: Common.Model -> View Common.Action
