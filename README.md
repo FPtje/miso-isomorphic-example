@@ -58,12 +58,3 @@ cd $(nix-build) && bin/server
 ```
 
 **Note**: The current working directory is important when running the server. The server won't be able to find the clientside part of the app when running the server from some place *other* than the folder with `bin` and `static`. This will prevent the javascript from loading and make the buttons not work. In other news, that's a great way of looking at the part of the app sent by the server.
-
-Using stack:
-
-**untested**
-
-```
-stack build
-???
-```
