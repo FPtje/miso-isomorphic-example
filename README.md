@@ -23,30 +23,19 @@ This example consists of a server, running the app on port `3003`, and a ghcjs c
 
 For quick overview, here's which parts of the application are defined where:
 
-| Server         | Client        | Common        |
-| -------------  | ------------- | ------------- |
-| Top level Html | Update function(s) | `Model` data type |
-| Servant routes | subscriptions | Initial model |
-|                |               | `Action` data type |
-|                |               | `View` functions |
-|                |               | Servant routes |
+| Server         | Client             | Common             |
+| -------------  | -------------      | -------------      |
+| Top level Html | Update function(s) | `Model` data type  |
+| Servant routes | subscriptions      | Initial model      |
+|                |                    | `Action` data type |
+|                |                    | `View` functions   |
+|                |                    | Servant routes     |
 
 Many important parts of the application are common to both client and server. It's more interesting, though, to look at what *isn't* common: The `update` function(s) and subscriptions live clientside only. This means that the server *cannot* add interactivity to the app. It can only render the actual Html page, using the initial model and the `View` functions. Any `Action`s referred to in the `View` functions are ignored by the server.
 
 So basically it renders the initial Html page, sends it off to the client which then adds interactivity.
 
 Note that "Servant routes" is listed both in `Common` and in `Server`. The routes in `Common` are linked to pages in the app itself, in this example just the top level `/` home route. The routes in `Server` include those defined in `Common`, but also define other routes, in our case the `/static/` route which serves the `all.js` of the clientside app.
-
-## Creating a multi-page app
-For simplicity's sake, this example only has one page: the `/` home page, with a simple counter. To expand the example to have multiple pages, I would recommend looking at [haskell-miso.org's source](https://github.com/haskell-miso/miso/tree/master/examples/haskell-miso.org).
-
-Here's a short summary of what has to be done to support for multiple routes to the application:
-
-- A subscription to changes in the URI using `uriSub` (See the website client's `Main.hs` file)
-- An `Action` to deal with the manual changing of the URI (See the `ChangeURI` `Action`)
-- Expand `ClientRoute` (See the website's `Common.hs` file)
-- One `View` function per route (see `handlers` in the website's `Common.hs`)
-- Serverside handlers for all routes (See `serverHandlers` in the website server's `Main.hs` file)
 
 
 ## Running the example
