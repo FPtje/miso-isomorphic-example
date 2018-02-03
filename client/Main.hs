@@ -21,6 +21,7 @@ main =
     , view          = Common.homeView
     , events        = defaultEvents
     , subs          = []
+    , mountPoint    = Nothing
     }
 
 
