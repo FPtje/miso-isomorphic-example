@@ -50,7 +50,7 @@ app =
     homeServer :: Servant.Handler (HtmlPage (View Common.Action))
     homeServer =
         pure $ HtmlPage $
-          Common.homeView $
+          Common.viewModel $
           Common.initialModel Common.homeLink
 
     -- Alternative type:
@@ -59,7 +59,7 @@ app =
     flippedServer :: Servant.Handler (HtmlPage (View Common.Action))
     flippedServer =
         pure $ HtmlPage $
-          Common.flippedView $
+          Common.viewModel $
           Common.initialModel Common.flippedLink
 
     -- The 404 page is a Wai application because the endpoint is Raw.
@@ -93,7 +93,7 @@ instance L.ToHtml a => L.ToHtml (HtmlPage a) where
 -- Converts the ClientRoutes (which are a servant tree of routes leading to
 -- some `View action`) to lead to `Get '[Html] (HtmlPage (View Common.Action))`
 type ServerRoutes
-   = Miso.ToServerRoutes Common.ClientRoutes HtmlPage Common.Action
+   = Miso.ToServerRoutes Common.ViewRoutes HtmlPage Common.Action
 
 -- The server serves static files besides the ServerRoutes, among which is the
 -- javascript file of the client.

@@ -16,11 +16,6 @@ import qualified Miso
 import Miso ( View, App(..) )
 import qualified Miso.String as Miso
 
--- Miso has to know what the URI of the application is for use in apps with
--- multiple pages.
-instance Miso.HasURI Common.Model where
-  lensURI = Common.uri
-
 main :: IO ()
 main = do
   currentURI <- Miso.getCurrentURI
@@ -29,7 +24,7 @@ main = do
     { initialAction = Common.NoOp
     , model         = Common.initialModel currentURI
     , update        = Miso.fromTransition . updateModel
-    , view          = viewModel
+    , view          = Common.viewModel
     , events        = Miso.defaultEvents
     , subs          = [ Miso.uriSub Common.HandleURIChange ]
     , mountPoint    = Nothing
@@ -48,17 +43,3 @@ updateModel action =
           Miso.pushURI uri
           pure Common.NoOp
       Common.HandleURIChange uri -> Common.uri .= uri
-
--- Checks which URI is open and shows the appropriate view
-viewModel :: Common.Model -> View Common.Action
-viewModel m =
-    case Miso.runRoute (Proxy @Common.ClientRoutes) viewTree m of
-      Left _routingError -> Common.page404View
-      Right v -> v
-
--- Servant tree of view functions
--- Should follow the structure of Common.ClientRoutes
-viewTree
-    ::      (Common.Model -> View Common.Action)
-       :<|> (Common.Model -> View Common.Action)
-viewTree = Common.homeView :<|> Common.flippedView
