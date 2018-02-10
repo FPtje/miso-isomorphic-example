@@ -7,25 +7,27 @@
 
 module Common where
 
-import           Control.Lens
-import           Data.Proxy
-import           Servant.API
+import Control.Lens
+import Data.Proxy ( Proxy(..) )
+import qualified Servant.API as Servant
+import Servant.API ( (:<|>), (:>) )
 #if MIN_VERSION_servant(0,10,0)
-import           Servant.Utils.Links
+import qualified Servant.Utils.Links as Servant
 #endif
-
-import           Miso
-import           Miso.String
+import Miso ( View )
+import Miso.Html
+import qualified Miso.String as Miso
+import qualified Network.URI as Network
 
 
 data Model
    = Model
-     { _uri          :: !URI
+     { _uri          :: !Network.URI
      , _counterValue :: !Int
      }
      deriving (Eq, Show)
 
-initialModel :: URI -> Model
+initialModel :: Network.URI -> Model
 initialModel uri =
     Model
     { _uri = uri
@@ -36,8 +38,8 @@ data Action
   = NoOp
   | AddOne
   | SubtractOne
-  | ChangeURI !URI
-  | HandleURIChange !URI
+  | ChangeURI !Network.URI
+  | HandleURIChange !Network.URI
   deriving (Show, Eq)
 
 -- Holds a servant route tree of `View action`
@@ -49,20 +51,20 @@ type Home = View Action
 -- Flipped route, same as Home, but with the buttons flipped
 type Flipped = "flipped" :> View Action
 
--- URI that points to the home route
-homeLink :: URI
+-- Network.URI that points to the home route
+homeLink :: Network.URI
 homeLink =
 #if MIN_VERSION_servant(0,10,0)
-    linkURI $ safeLink (Proxy @ClientRoutes) (Proxy @Home)
+    Servant.linkURI $ Servant.safeLink (Proxy @ClientRoutes) (Proxy @Home)
 #else
     safeLink (Proxy @ClientRoutes) (Proxy @Home)
 #endif
 
--- URI that points to the flipped route
-flippedLink :: URI
+-- Network.URI that points to the flipped route
+flippedLink :: Network.URI
 flippedLink =
 #if MIN_VERSION_servant(0,10,0)
-    linkURI $ safeLink (Proxy @ClientRoutes) (Proxy @Flipped)
+    Servant.linkURI $ Servant.safeLink (Proxy @ClientRoutes) (Proxy @Flipped)
 #else
     safeLink (Proxy @ClientRoutes) (Proxy @Flipped)
 #endif
@@ -76,7 +78,7 @@ homeView m =
       [ div_
         []
         [ button_ [ onClick SubtractOne ] [ text "-" ]
-        , text $ ms $ show $ _counterValue m
+        , text $ Miso.ms $ show $ _counterValue m
         , button_ [ onClick AddOne ] [ text "+" ]
         ]
       , button_ [ onClick $ ChangeURI flippedLink ] [ text "Go to /flipped" ]
@@ -89,7 +91,7 @@ flippedView m =
       [ div_
         []
         [ button_ [ onClick AddOne ] [ text "+" ]
-        , text $ ms $ show $ _counterValue m
+        , text $ Miso.ms $ show $ _counterValue m
         , button_ [ onClick SubtractOne ] [ text "-" ]
         ]
       , button_ [ onClick $ ChangeURI homeLink ] [ text "Go to /" ]

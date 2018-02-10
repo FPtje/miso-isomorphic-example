@@ -18,7 +18,8 @@ import qualified Servant
 import           Servant ( (:>), (:<|>)(..) )
 import qualified System.IO                            as IO
 
-import           Miso
+import qualified Miso
+import Miso ( View )
 
 main :: IO ()
 main = do
@@ -92,7 +93,7 @@ instance L.ToHtml a => L.ToHtml (HtmlPage a) where
 -- Converts the ClientRoutes (which are a servant tree of routes leading to
 -- some `View action`) to lead to `Get '[Html] (HtmlPage (View Common.Action))`
 type ServerRoutes
-   = ToServerRoutes Common.ClientRoutes HtmlPage Common.Action
+   = Miso.ToServerRoutes Common.ClientRoutes HtmlPage Common.Action
 
 -- The server serves static files besides the ServerRoutes, among which is the
 -- javascript file of the client.
