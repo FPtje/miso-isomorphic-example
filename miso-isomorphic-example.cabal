@@ -51,6 +51,7 @@ executable client
       aeson,
       base < 5,
       containers,
+      ghcjs-base,
       lens,
       miso,
       network-uri,

@@ -6,7 +6,7 @@ module Main where
 
 import qualified Common
 import Data.Proxy ( Proxy(..) )
-import Control.Lens ( (^.), (+=), (-=), (.=), makeLenses )
+import Control.Lens ( (^.), (%=), (+=), (-=), (.=), makeLenses )
 import qualified Servant.API as Servant
 import Servant.API ( (:<|>)(..) )
 #if MIN_VERSION_servant(0,10,0)
@@ -15,6 +15,7 @@ import qualified Servant.Utils.Links as Servant
 import qualified Miso
 import Miso ( View, App(..) )
 import qualified Miso.String as Miso
+import qualified JavaScript.Object.Internal as JS
 
 main :: IO ()
 main = do
@@ -43,3 +44,13 @@ updateModel action =
           Miso.pushURI uri
           pure Common.NoOp
       Common.HandleURIChange uri -> Common.uri .= uri
+      Common.OnCreated sink (Miso.DOMNode obj) -> Miso.scheduleIO $ do
+        putStrLn "OnCreated!!!"
+        Miso.consoleLog obj
+        pure Common.NoOp
+      Common.OnDestroyed (Miso.DOMNode obj) -> Miso.scheduleIO $ do
+        putStrLn "OnDestroyed!"
+        Miso.consoleLog obj
+        pure Common.NoOp
+      Common.HideAll ->
+        Common.hideAll %= not
