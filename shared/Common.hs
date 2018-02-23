@@ -22,18 +22,32 @@ import qualified Network.URI as Network
 
 data Model
    = Model
-     { _uri          :: !Network.URI
-     , _counterValue :: !Int
-     , _hideAll      :: !Bool
+     { _uri             :: !Network.URI
+     , _counterValue    :: !Int
+     , _hideAll         :: !Bool
+     , _homePlusKey     :: !Miso.LifeCycleKey
+     , _homeMinusKey    :: !Miso.LifeCycleKey
+     , _flippedPlusKey  :: !Miso.LifeCycleKey
+     , _flippedMinusKey :: !Miso.LifeCycleKey
      }
-     deriving (Eq, Show)
+     deriving (Eq)
 
-initialModel :: Network.URI -> Model
-initialModel uri =
+initialModel
+    :: Network.URI
+    -> Miso.LifeCycleKey
+    -> Miso.LifeCycleKey
+    -> Miso.LifeCycleKey
+    -> Miso.LifeCycleKey
+    -> Model
+initialModel uri homePlus homeMinus flippedPlus flippedMinus =
     Model
-    { _uri = uri
-    , _counterValue = 0
-    , _hideAll = False
+    { _uri             = uri
+    , _counterValue    = 0
+    , _hideAll         = False
+    , _homePlusKey     = homePlus
+    , _homeMinusKey    = homeMinus
+    , _flippedPlusKey  = flippedPlus
+    , _flippedMinusKey = flippedMinus
     }
 
 data Action
@@ -84,9 +98,9 @@ homeView m =
         else
           [ div_
             []
-            [ button_ [ onClick SubtractOne, Miso.lifeCycleEvents "home-" OnCreated OnDestroyed ] [ text "-" ]
+            [ button_ [ onClick SubtractOne, Miso.lifeCycleEvents (_homePlusKey m) OnCreated OnDestroyed ] [ text "-" ]
             , text $ Miso.ms $ show $ _counterValue m
-            , button_ [ onClick AddOne, Miso.lifeCycleEvents "home+" OnCreated OnDestroyed ] [ text "+" ]
+            , button_ [ onClick AddOne, Miso.lifeCycleEvents (_homeMinusKey m) OnCreated OnDestroyed ] [ text "+" ]
             ]
           , button_ [ onClick $ ChangeURI flippedLink ] [ text "Go to /flipped" ]
           ]
@@ -97,9 +111,9 @@ flippedView m =
     div_ []
       [ div_
         []
-        [ button_ [ onClick AddOne, Miso.lifeCycleEvents "flipped+" OnCreated OnDestroyed ] [ text "+" ]
+        [ button_ [ onClick AddOne, Miso.lifeCycleEvents (_flippedPlusKey m) OnCreated OnDestroyed ] [ text "+" ]
         , text $ Miso.ms $ show $ _counterValue m
-        , button_ [ onClick SubtractOne, Miso.lifeCycleEvents "flipped-" OnCreated OnDestroyed ] [ text "-" ]
+        , button_ [ onClick SubtractOne, Miso.lifeCycleEvents (_flippedMinusKey m) OnCreated OnDestroyed ] [ text "-" ]
         ]
       , button_ [ onClick $ ChangeURI homeLink ] [ text "Go to /" ]
       ]

@@ -4,6 +4,7 @@
 
 module Main where
 
+import Control.Monad.IO.Class (liftIO)
 import qualified Common
 import Data.Proxy ( Proxy(..) )
 import Control.Lens ( (^.), (%=), (+=), (-=), (.=), makeLenses )
@@ -21,9 +22,20 @@ main :: IO ()
 main = do
   currentURI <- Miso.getCurrentURI
 
+  homePlus     <- liftIO Miso.createLifeCycleKey
+  homeMinus    <- liftIO Miso.createLifeCycleKey
+  flippedPlus  <- liftIO Miso.createLifeCycleKey
+  flippedMinus <- liftIO Miso.createLifeCycleKey
+
   Miso.miso App
     { initialAction = Common.NoOp
-    , model         = Common.initialModel currentURI
+    , model         =
+        Common.initialModel
+          currentURI
+          homePlus
+          homeMinus
+          flippedPlus
+          flippedMinus
     , update        = Miso.fromTransition . updateModel
     , view          = Common.viewModel
     , events        = Miso.defaultEvents

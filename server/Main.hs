@@ -5,6 +5,7 @@
 
 module Main where
 
+import           Control.Monad.IO.Class (liftIO)
 import qualified Common
 import           Data.Proxy
 import qualified Lucid                                as L
@@ -48,19 +49,27 @@ app =
     -- Servant.Server (ToServerRoutes Common.Home HtmlPage Common.Action)
     -- Handles the route for the home page, rendering Common.homeView.
     homeServer :: Servant.Handler (HtmlPage (View Common.Action))
-    homeServer =
+    homeServer = do
+        homePlus     <- liftIO Miso.createLifeCycleKey
+        homeMinus    <- liftIO Miso.createLifeCycleKey
+        flippedPlus  <- liftIO Miso.createLifeCycleKey
+        flippedMinus <- liftIO Miso.createLifeCycleKey
         pure $ HtmlPage $
           Common.viewModel $
-          Common.initialModel Common.homeLink
+          Common.initialModel Common.homeLink homePlus homeMinus flippedPlus flippedMinus
 
     -- Alternative type:
     -- Servant.Server (ToServerRoutes Common.Flipped HtmlPage Common.Action)
     -- Renders the /flipped page.
     flippedServer :: Servant.Handler (HtmlPage (View Common.Action))
-    flippedServer =
+    flippedServer = do
+        homePlus     <- liftIO Miso.createLifeCycleKey
+        homeMinus    <- liftIO Miso.createLifeCycleKey
+        flippedPlus  <- liftIO Miso.createLifeCycleKey
+        flippedMinus <- liftIO Miso.createLifeCycleKey
         pure $ HtmlPage $
           Common.viewModel $
-          Common.initialModel Common.flippedLink
+          Common.initialModel Common.flippedLink homePlus homeMinus flippedPlus flippedMinus
 
     -- The 404 page is a Wai application because the endpoint is Raw.
     -- It just renders the page404View and sends it to the client.
