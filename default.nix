@@ -22,8 +22,8 @@ let
   inherit (pkgs.haskell.packages) ghcjsHEAD ghc802;
 
   miso-src = pkgs.fetchFromGitHub {
-    rev = "3f614f255961bb7ed92f0b24a292acf5e6287b34";
-    sha256 = "0ynljfp6wh3qgfllk3afc8rykqlgjkq67nrmgmcq8f3xqrmavi4p";
+    rev = "a03f9a1e370d369722d643d1cc93dc0a13fab59b";
+    sha256 = "16r64x39x42fp576c5wcvwphanyckmzvzmv7yw8djyg8p4wrqrzj";
     owner = "FPtje";
     repo = "miso";
   };

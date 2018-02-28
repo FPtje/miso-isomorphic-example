@@ -25,29 +25,15 @@ data Model
      { _uri             :: !Network.URI
      , _counterValue    :: !Int
      , _hideAll         :: !Bool
-     , _homePlusKey     :: !Miso.LifeCycleKey
-     , _homeMinusKey    :: !Miso.LifeCycleKey
-     , _flippedPlusKey  :: !Miso.LifeCycleKey
-     , _flippedMinusKey :: !Miso.LifeCycleKey
      }
      deriving (Eq)
 
-initialModel
-    :: Network.URI
-    -> Miso.LifeCycleKey
-    -> Miso.LifeCycleKey
-    -> Miso.LifeCycleKey
-    -> Miso.LifeCycleKey
-    -> Model
-initialModel uri homePlus homeMinus flippedPlus flippedMinus =
+initialModel :: Network.URI -> Model
+initialModel uri =
     Model
     { _uri             = uri
     , _counterValue    = 0
     , _hideAll         = False
-    , _homePlusKey     = homePlus
-    , _homeMinusKey    = homeMinus
-    , _flippedPlusKey  = flippedPlus
-    , _flippedMinusKey = flippedMinus
     }
 
 data Action
@@ -56,8 +42,8 @@ data Action
   | SubtractOne
   | ChangeURI !Network.URI
   | HandleURIChange !Network.URI
-  | OnCreated (Action -> IO ()) !Miso.DOMNode
-  | OnDestroyed !Miso.DOMNode
+  | OnCreated
+  | OnDestroyed
   | HideAll
 
 -- Holds a servant route tree of `View action`
@@ -98,9 +84,21 @@ homeView m =
         else
           [ div_
             []
-            [ button_ [ onClick SubtractOne, Miso.lifeCycleEvents (_homePlusKey m) OnCreated OnDestroyed ] [ text "-" ]
+            [ nodeHtmlKeyed "button" (Miso.toKey @Miso.MisoString "-button-home")
+              [ onClick SubtractOne
+              , Miso.id_ "-button-home"
+              , Miso.onCreated OnCreated
+              , Miso.onDestroyed OnDestroyed
+              ]
+              [ text "-" ]
             , text $ Miso.ms $ show $ _counterValue m
-            , button_ [ onClick AddOne, Miso.lifeCycleEvents (_homeMinusKey m) OnCreated OnDestroyed ] [ text "+" ]
+            , nodeHtmlKeyed "button" (Miso.toKey @Miso.MisoString "+button-home")
+              [ onClick AddOne
+              , Miso.id_ "+button-home"
+              , Miso.onCreated OnCreated
+              , Miso.onDestroyed OnDestroyed
+              ]
+              [ text "+" ]
             ]
           , button_ [ onClick $ ChangeURI flippedLink ] [ text "Go to /flipped" ]
           ]
@@ -111,9 +109,21 @@ flippedView m =
     div_ []
       [ div_
         []
-        [ button_ [ onClick AddOne, Miso.lifeCycleEvents (_flippedPlusKey m) OnCreated OnDestroyed ] [ text "+" ]
+        [ nodeHtmlKeyed "button" (Miso.toKey @Miso.MisoString "+button-flipped")
+          [ onClick AddOne
+          , Miso.id_ "+button-flipped"
+          , Miso.onCreated OnCreated
+          , Miso.onDestroyed OnDestroyed
+          ]
+          [ text "+" ]
         , text $ Miso.ms $ show $ _counterValue m
-        , button_ [ onClick SubtractOne, Miso.lifeCycleEvents (_flippedMinusKey m) OnCreated OnDestroyed ] [ text "-" ]
+        , nodeHtmlKeyed "button" (Miso.toKey @Miso.MisoString "-button-flipped")
+          [ onClick SubtractOne
+          , Miso.id_ "-button-flipped"
+          , Miso.onCreated OnCreated
+          , Miso.onDestroyed OnDestroyed
+          ]
+          [ text "-" ]
         ]
       , button_ [ onClick $ ChangeURI homeLink ] [ text "Go to /" ]
       ]

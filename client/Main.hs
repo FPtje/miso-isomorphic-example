@@ -22,20 +22,9 @@ main :: IO ()
 main = do
   currentURI <- Miso.getCurrentURI
 
-  homePlus     <- liftIO Miso.createLifeCycleKey
-  homeMinus    <- liftIO Miso.createLifeCycleKey
-  flippedPlus  <- liftIO Miso.createLifeCycleKey
-  flippedMinus <- liftIO Miso.createLifeCycleKey
-
   Miso.miso App
     { initialAction = Common.NoOp
-    , model         =
-        Common.initialModel
-          currentURI
-          homePlus
-          homeMinus
-          flippedPlus
-          flippedMinus
+    , model         = Common.initialModel currentURI
     , update        = Miso.fromTransition . updateModel
     , view          = Common.viewModel
     , events        = Miso.defaultEvents
@@ -56,13 +45,11 @@ updateModel action =
           Miso.pushURI uri
           pure Common.NoOp
       Common.HandleURIChange uri -> Common.uri .= uri
-      Common.OnCreated sink (Miso.DOMNode obj) -> Miso.scheduleIO $ do
+      Common.OnCreated -> Miso.scheduleIO $ do
         putStrLn "OnCreated!!!"
-        Miso.consoleLog obj
         pure Common.NoOp
-      Common.OnDestroyed (Miso.DOMNode obj) -> Miso.scheduleIO $ do
+      Common.OnDestroyed -> Miso.scheduleIO $ do
         putStrLn "OnDestroyed!"
-        Miso.consoleLog obj
         pure Common.NoOp
       Common.HideAll ->
         Common.hideAll %= not
