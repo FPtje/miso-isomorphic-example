@@ -13,5 +13,5 @@ mkDerivation {
     servant-lucid servant-server wai wai-extra warp lens
   ];
   description = "Example showing the isomorphic aspect of miso";
-  license = stdenv.lib.licenses.unfree;
+  license = stdenv.lib.licenses.unlicense;
 }

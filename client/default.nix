@@ -7,5 +7,5 @@ mkDerivation {
   isExecutable = true;
   executableHaskellDepends = [ aeson base containers miso lens servant ];
   description = "Example showing the isomorphic aspect of miso";
-  license = stdenv.lib.licenses.unfree;
+  license = stdenv.lib.licenses.unlicense;
 }
