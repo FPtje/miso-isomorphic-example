@@ -83,7 +83,7 @@ instance L.ToHtml a => L.ToHtml (HtmlPage a) where
             L.meta_ [L.charset_ "utf-8"]
 
             L.with (L.script_ mempty)
-              [ L.makeAttribute "src" "static/all.js"
+              [ L.makeAttribute "src" "/static/all.js"
               , L.makeAttribute "async" mempty
               , L.makeAttribute "defer" mempty
               ]
