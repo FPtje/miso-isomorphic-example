@@ -55,9 +55,9 @@ type Flipped = "flipped" :> View Action
 makeLenses ''Model
 
 -- Checks which URI is open and shows the appropriate view
-viewModel :: Common.Model -> View Common.Action
+viewModel :: Model -> View Action
 viewModel m =
-    case Miso.runRoute (Proxy @Common.ViewRoutes) viewTree m of
+    case Miso.runRoute (Proxy @ViewRoutes) viewTree m of
       Left _routingError -> page404View
       Right v -> v
 
@@ -118,5 +118,5 @@ flippedLink =
 
 -- Miso has to know what the URI of the application is for use in apps with
 -- multiple pages.
-instance Miso.HasURI Common.Model where
+instance Miso.HasURI Model where
   lensURI = Common.uri
