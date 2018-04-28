@@ -13,7 +13,7 @@ let
 
   nixpkgs-src = fetchTarball-compat {
    url = "https://github.com/NixOS/nixpkgs-channels/archive/c1d9aff56e0ae52ee4705440fe09291a51e91977.tar.gz";
-   sha256 = "1dsszs9ds17n006yv4il39640msslmhdh3ckg4l0vfq8y11ljvss";
+   sha256 = "13qfydr4a4by3fnqxcczdq0zr6vsqxbdmj8grwbsk3xjhw4442p9";
   };
 
   pkgs = import (nixpkgs-src) {};
@@ -22,9 +22,9 @@ let
   inherit (pkgs.haskell.packages) ghcjsHEAD ghc802;
 
   miso-src = pkgs.fetchFromGitHub {
-    rev = "adea51505f30853caae76f38faa5e9f192ae8827";
-    sha256 = "0x8dik2cx5j11svb091pzy2ycvhbb88534fng2v9bic5yx1a8c72";
-    owner = "haskell-miso";
+    rev = "c756a6771a2da437f874645b1930e12d27127650";
+    sha256 = "06ra3imm65fxfw41nnns5hvhwpsr56kn13x27glv7g43vx8ny5y3";
+    owner = "dmjio";
     repo = "miso";
   };
 

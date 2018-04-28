@@ -57,7 +57,7 @@ makeLenses ''Model
 -- Checks which URI is open and shows the appropriate view
 viewModel :: Model -> View Action
 viewModel m =
-    case Miso.runRoute (Proxy @ViewRoutes) viewTree m of
+    case Miso.runRoute (Proxy @ViewRoutes) viewTree _uri m of
       Left _routingError -> page404View
       Right v -> v
 
@@ -115,8 +115,3 @@ flippedLink =
 #else
     safeLink (Proxy @ViewRoutes) (Proxy @Flipped)
 #endif
-
--- Miso has to know what the URI of the application is for use in apps with
--- multiple pages.
-instance Miso.HasURI Model where
-  lensURI = Common.uri

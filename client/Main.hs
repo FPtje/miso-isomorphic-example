@@ -17,10 +17,8 @@ import Miso ( View, App(..) )
 import qualified Miso.String as Miso
 
 main :: IO ()
-main = do
-  currentURI <- Miso.getCurrentURI
-
-  Miso.miso App
+main =
+  Miso.miso $ \currentURI -> App
     { initialAction = Common.NoOp
     , model         = Common.initialModel currentURI
     , update        = Miso.fromTransition . updateModel
