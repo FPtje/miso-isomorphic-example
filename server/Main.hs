@@ -77,7 +77,7 @@ newtype HtmlPage a = HtmlPage a
 instance L.ToHtml a => L.ToHtml (HtmlPage a) where
     toHtmlRaw = L.toHtml
     toHtml (HtmlPage x) =
-        L.doctypehtml_ $ do
+        L.doctype_ $ do
           L.head_ $ do
             L.title_ "Miso isomorphic example"
             L.meta_ [L.charset_ "utf-8"]
