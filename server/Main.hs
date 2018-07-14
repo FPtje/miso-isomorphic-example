@@ -76,19 +76,19 @@ newtype HtmlPage a = HtmlPage a
 
 instance L.ToHtml a => L.ToHtml (HtmlPage a) where
     toHtmlRaw = L.toHtml
-    toHtml (HtmlPage x) =
-        L.doctype_ $ do
-          L.head_ $ do
-            L.title_ "Miso isomorphic example"
-            L.meta_ [L.charset_ "utf-8"]
+    toHtml (HtmlPage x) = do
+        L.doctype_
+        L.head_ $ do
+          L.title_ "Miso isomorphic example"
+          L.meta_ [L.charset_ "utf-8"]
 
-            L.with (L.script_ mempty)
-              [ L.makeAttribute "src" "/static/all.js"
-              , L.makeAttribute "async" mempty
-              , L.makeAttribute "defer" mempty
-              ]
+          L.with (L.script_ mempty)
+            [ L.makeAttribute "src" "/static/all.js"
+            , L.makeAttribute "async" mempty
+            , L.makeAttribute "defer" mempty
+            ]
 
-          L.body_ (L.toHtml x)
+        L.body_ (L.toHtml x)
 
 -- Converts the ClientRoutes (which are a servant tree of routes leading to
 -- some `View action`) to lead to `Get '[Html] (HtmlPage (View Common.Action))`
