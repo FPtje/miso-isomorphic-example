@@ -12,27 +12,48 @@ let
      fetchTarball attrs;
 
   nixpkgs-src = fetchTarball-compat {
-   url = "https://github.com/NixOS/nixpkgs-channels/archive/c1d9aff56e0ae52ee4705440fe09291a51e91977.tar.gz";
-   sha256 = "13qfydr4a4by3fnqxcczdq0zr6vsqxbdmj8grwbsk3xjhw4442p9";
+   url = "https://github.com/NixOS/nixpkgs-channels/archive/3fd87ad0073fd1ef71a8fcd1a1d1a89392c33d0a.tar.gz";
+   sha256 = "0n4ffwwfdybphx1iyqz1p7npk8w4n78f8jr5nq8ldnx2amrkfwhl";
   };
 
   pkgs = import (nixpkgs-src) {};
 
   inherit (pkgs) runCommand closurecompiler;
-  inherit (pkgs.haskell.packages) ghcjsHEAD ghc802;
+  inherit (pkgs.haskell.packages) ghcjs84 ghc844;
+
+  servant-src = pkgs.fetchFromGitHub {
+    owner = "haskell-servant";
+    repo = "servant";
+    rev = "e3e5d2b23057c2c3409e5e210b613527baf3b77d";
+    sha256 = "0n9xn2f61mprnvn9838zbl4dv2ynnl0kxxrcpf5c0igdrks8pqws";
+  };
+
+  # Many packages don't build on ghcjs because of a dependency on doctest
+  # (which doesn't build), or because of a runtime error during the test run.
+  # See: https://github.com/ghcjs/ghcjs/issues/711
+  ghcjs = ghcjs84.override {
+    overrides = final: previous: with pkgs.haskell.lib; {
+      tasty-quickcheck = dontCheck previous.tasty-quickcheck;
+      http-types       = dontCheck previous.http-types;
+      comonad          = dontCheck previous.comonad;
+      semigroupoids    = dontCheck previous.semigroupoids;
+      lens             = dontCheck previous.lens;
+      servant          = dontCheck (doJailbreak (previous.callCabal2nix "servant" (servant-src + "/servant") {}));
+    };
+  };
 
   miso-src = pkgs.fetchFromGitHub {
-    rev = "bb2be3264ff3c6aa3b18e471d7cf04296024059b";
+    rev = "630e823dd40a434b73124e12b229a79d9fefb01d";
     sha256 = "07k1rlvl9g027fp2khl9kiwla4rcn9sv8v2dzm0rzf149aal93vn";
     owner = "haskell-miso";
     repo = "miso";
   };
 
-  miso-ghc   = ghc802.callCabal2nix "miso" miso-src {};
-  miso-ghcjs = ghcjsHEAD.callCabal2nix "miso" miso-src {};
+  miso-ghc   = ghc844.callCabal2nix "miso" miso-src {};
+  miso-ghcjs = ghcjs.callCabal2nix "miso" miso-src {};
 
-  server = ghc802.callPackage ./server { miso = miso-ghc; };
-  client = ghcjsHEAD.callPackage ./client { miso = miso-ghcjs; };
+  server = ghc844.callPackage ./server { miso = miso-ghc; };
+  client = ghcjs.callPackage ./client { miso = miso-ghcjs; };
 in
   runCommand "miso-ismorphic-example" { inherit client server; } ''
     mkdir -p $out/{bin,static}
