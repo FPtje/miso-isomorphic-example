@@ -24,7 +24,7 @@ let
   servant-src = pkgs.fetchFromGitHub {
     owner = "haskell-servant";
     repo = "servant";
-    rev = "e3e5d2b23057c2c3409e5e210b613527baf3b77d";
+    rev = "v0.15";
     sha256 = "0n9xn2f61mprnvn9838zbl4dv2ynnl0kxxrcpf5c0igdrks8pqws";
   };
 
@@ -43,7 +43,7 @@ let
   };
 
   miso-src = pkgs.fetchFromGitHub {
-    rev = "630e823dd40a434b73124e12b229a79d9fefb01d";
+    rev = "0.21.2.0";
     sha256 = "07k1rlvl9g027fp2khl9kiwla4rcn9sv8v2dzm0rzf149aal93vn";
     owner = "haskell-miso";
     repo = "miso";
