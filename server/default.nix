@@ -1,17 +1,13 @@
-{ mkDerivation, aeson, base, lens, containers, http-types, lucid, miso
-, mtl, network-uri, servant, servant-lucid, servant-server, stdenv
-, wai, wai-extra, warp
-}:
-mkDerivation {
-  pname = "miso-isomorphic-example";
-  version = "0.1.0.0";
-  src = ../.;
-  isLibrary = false;
-  isExecutable = true;
-  executableHaskellDepends = [
-    aeson base containers http-types lucid miso mtl network-uri servant
-    servant-lucid servant-server wai wai-extra warp lens
-  ];
-  description = "Example showing the isomorphic aspect of miso";
-  license = stdenv.lib.licenses.unlicense;
-}
+{ pkgs ? import ../nixpkgs.nix }:
+
+let
+
+  _server = pkgs.haskell.packages.ghc.callCabal2nix "server" ./. {
+    common = pkgs.haskell.packages.ghc.callCabal2nix "common" ../common {};
+  };
+
+in
+
+  if pkgs.lib.inNixShell then _server.env else _server
+
+
