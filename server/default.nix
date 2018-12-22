@@ -2,12 +2,12 @@
 
 let
 
-  _server = pkgs.haskell.packages.ghc.callCabal2nix "server" ./. {
+  server = pkgs.haskell.packages.ghc.callCabal2nix "server" ./. {
     common = pkgs.haskell.packages.ghc.callCabal2nix "common" ../common {};
   };
 
 in
 
-  if pkgs.lib.inNixShell then _server.env else _server
+  if pkgs.lib.inNixShell then server.env else server
 
 

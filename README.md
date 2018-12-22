@@ -69,7 +69,7 @@ exit
 ```bash
 cd client
 nix-shell
-cabal new-build
+cabal build
 ...
 exit
 ```
@@ -85,12 +85,9 @@ cabal run server
 exit
 ```
 
-You need to initialize the server before running `cabal run server`:
+You need to make the client available to the server before running `cabal run server`:
 
 ```bash
 mkdir static
 ln -sf $(find ../client -name all.js) static/
 ```
-
-You can also use `cabal new-*` commands for `common` and `server` but this creates a file `.ghc.environment...` that should be deleted after exiting the `nix-shell`.
-

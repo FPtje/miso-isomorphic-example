@@ -2,9 +2,9 @@
 
 let
 
-  _common = pkgs.haskellPackages.callCabal2nix "common" ./. {};
+  common = pkgs.haskellPackages.callCabal2nix "common" ./. {};
 
 in
 
-if pkgs.lib.inNixShell then _common.env else _common
+if pkgs.lib.inNixShell then common.env else common
 
