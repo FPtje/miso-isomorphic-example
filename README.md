@@ -17,7 +17,7 @@ In applications *with* isomorphism, the body of the html page is rendered on the
 ## The example explained
 This example consists of a server, running the app on port `3003`, and a ghcjs client. Three Haskell files define both:
 
-- [`Common.hs`](shared/Common.hs) Contains code used by *both* client and server
+- [`Common.hs`](common/Common.hs) Contains code used by *both* client and server
 - [`client/Main.hs`](client/Main.hs) Defines the client
 - [`server/Main.hs`](server/Main.hs) Defines the server
 
@@ -47,3 +47,47 @@ cd $(nix-build) && bin/server
 ```
 
 **Note**: The current working directory is important when running the server. The server won't be able to find the clientside part of the app when running the server from some place *other* than the folder with `bin` and `static`. This will prevent the javascript from loading and make the buttons not work. In other news, that's a great way of looking at the part of the app sent by the server.
+
+
+## Developing the project
+
+You can work on the different sub-projects (`client`, `common` and `server`) using `nix-shell` and `cabal`.
+
+`common`:
+
+```bash
+cd common
+nix-shell
+cabal build
+cabal run common-test
+...
+exit
+```
+
+`client`:
+
+```bash
+cd client
+nix-shell
+cabal build
+...
+exit
+```
+
+`server`:
+
+```bash
+cd server
+nix-shell
+cabal build
+cabal run server
+...
+exit
+```
+
+You need to make the client available to the server before running `cabal run server`:
+
+```bash
+mkdir static
+ln -sf $(find ../client -name all.js) static/
+```

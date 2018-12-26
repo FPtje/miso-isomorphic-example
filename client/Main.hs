@@ -10,7 +10,7 @@ import Control.Lens ( (^.), (+=), (-=), (.=), makeLenses )
 import qualified Servant.API as Servant
 import Servant.API ( (:<|>)(..) )
 #if MIN_VERSION_servant(0,10,0)
-import qualified Servant.Utils.Links as Servant
+import qualified Servant.Links as Servant
 #endif
 import qualified Miso
 import Miso ( View, App(..) )

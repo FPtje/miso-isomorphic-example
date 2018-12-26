@@ -103,3 +103,4 @@ type ServerAPI =
   :<|> Servant.Raw) -- This will show the 404 page for any unknown route
 
 type StaticAPI = "static" :> Servant.Raw
+
