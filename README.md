@@ -59,7 +59,6 @@ You can work on the different sub-projects (`client`, `common` and `server`) usi
 cd common
 nix-shell
 cabal build
-cabal run common-test
 ...
 exit
 ```
@@ -88,6 +87,7 @@ exit
 You need to make the client available to the server before running `cabal run server`:
 
 ```bash
+cd server
 mkdir static
-ln -sf $(find ../client -name all.js) static/
+ln -sf ../$(find ../client -name all.js) static/
 ```
