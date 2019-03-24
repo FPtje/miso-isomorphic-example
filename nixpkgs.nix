@@ -43,6 +43,7 @@ let
             overrides = self: super: with pkgs.haskell.lib; {
               tasty-quickcheck = dontCheck super.tasty-quickcheck;
               http-types       = dontCheck super.http-types;
+              http-media       = dontCheck super.http-media;
               comonad          = dontCheck super.comonad;
               semigroupoids    = dontCheck super.semigroupoids;
               lens             = dontCheck super.lens;
