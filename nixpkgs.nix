@@ -5,22 +5,8 @@ let
   nixpkgs-src = bootstrap.fetchFromGitHub {
     owner = "NixOS";
     repo  = "nixpkgs";
-    rev = "3fd87ad0073fd1ef71a8fcd1a1d1a89392c33d0a";
-    sha256 = "0n4ffwwfdybphx1iyqz1p7npk8w4n78f8jr5nq8ldnx2amrkfwhl";
-  };
-
-  servant-src = bootstrap.fetchFromGitHub {
-    owner = "haskell-servant";
-    repo = "servant";
-    rev = "v0.15";
-    sha256 = "0n9xn2f61mprnvn9838zbl4dv2ynnl0kxxrcpf5c0igdrks8pqws";
-  };
-
-  miso-src = bootstrap.fetchFromGitHub {
-    owner = "haskell-miso";
-    repo = "miso";
-    rev = "0.21.2.0";
-    sha256 = "07k1rlvl9g027fp2khl9kiwla4rcn9sv8v2dzm0rzf149aal93vn";
+    rev = "725b5499b89fe80d7cfbb00bd3c140a73cbdd97f";
+    sha256 = "0xdhv9k0nq8d91qdw66d6ln2jsqc9ij7r24l9jnv4c4bfpl4ayy7";
   };
 
   config = { 
@@ -28,18 +14,14 @@ let
       haskell = pkgs.haskell // {
         packages = pkgs.haskell.packages // {
 
-          ghc = pkgs.haskell.packages.ghc844.override {
-            overrides = self: super: with pkgs.haskell.lib; {
-                miso = self.callCabal2nix "miso" miso-src {};
-              };
-            };
+          ghc = pkgs.haskell.packages.ghc864;
 
           } // {
 
           # Many packages don't build on ghcjs because of a dependency on doctest
           # (which doesn't build), or because of a runtime error during the test run.
           # See: https://github.com/ghcjs/ghcjs/issues/711
-          ghcjs = pkgs.haskell.packages.ghcjs84.override {
+          ghcjs = pkgs.haskell.packages.ghcjs86.override {
             overrides = self: super: with pkgs.haskell.lib; {
               tasty-quickcheck = dontCheck super.tasty-quickcheck;
               http-types       = dontCheck super.http-types;
@@ -47,9 +29,11 @@ let
               comonad          = dontCheck super.comonad;
               semigroupoids    = dontCheck super.semigroupoids;
               lens             = dontCheck super.lens;
+              QuickCheck       = dontCheck super.QuickCheck;
 
-              miso    = self.callCabal2nix "miso" miso-src {};
-              servant = dontCheck (doJailbreak (self.callCabal2nix "servant" (servant-src + "/servant") {}));
+              network = dontCheck (doJailbreak super.network_2_6_3_1);
+              servant-client = dontCheck (doJailbreak super.servant-client);
+              servant = dontCheck (doJailbreak super.servant);
             };
           };
 
