@@ -73,7 +73,15 @@ cabal build
 exit
 ```
 
-`server`:
+After the client has been built, you can make a reference to it in the server. The server will need to know where to find the compiled client in order to serve it:
+
+```bash
+cd server
+mkdir static
+ln -sf ../$(find ../client -name all.js) static/
+```
+
+Lastly, building and running the server:
 
 ```bash
 cd server
@@ -82,12 +90,4 @@ cabal build
 cabal run server
 ...
 exit
-```
-
-You need to make the client available to the server before running `cabal run server`:
-
-```bash
-cd server
-mkdir static
-ln -sf ../$(find ../client -name all.js) static/
 ```
