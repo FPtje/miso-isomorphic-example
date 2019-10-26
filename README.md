@@ -1,5 +1,10 @@
 # Single page isomorphic example
-This is a minimal example of Miso's Isomorphic feature.
+This is a minimal example of Miso's Isomorphic feature. This example is focused on answering the questions:
+
+- What is isomorphism?
+- How do I get it to work with Miso?
+
+There's a more expanded example available [here](https://github.com/Tehnix/miso-isomorphic-stack), it uses stack to build the project instead of nix, and it shows how to set up a developer environment.
 
 ## About isomorphism
 Chances are that you happen to know what the mathematical definition of *isomorphism* is. If you do, forget that definition *right now* and treat it as a new term altogether. That'll be easier.
