@@ -73,7 +73,7 @@ exit
 ```bash
 cd client
 nix-shell
-cabal build
+cabal build --ghcjs
 ...
 exit
 ```
